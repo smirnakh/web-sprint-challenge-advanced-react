@@ -35,6 +35,7 @@ function getXY() {
     setEmail('')
     setX(2)
     setY(2)
+    setIndex(4)
 
     // Use this helper to reset all states to their initial values.
   }
@@ -47,7 +48,7 @@ function getXY() {
 
   function move(evt) {
     const direction = evt.target.id ;
-
+    
     if (x === 1 && direction === "left"){
       setMessage(`You can't go left`)
       return
@@ -67,16 +68,20 @@ function getXY() {
     setMessage('')
     setStep(step + 1)
     if (direction === "up"){
-      setY(y - 1)
+      setY(y - 1) 
+      setIndex(index - 3)
     }
     if (direction === "down"){
       setY(y + 1)
+      setIndex(index + 3)
     } 
     if (direction === "right"){
       setX(x + 1)
+      setIndex(index + 1)
     } 
     if (direction === "left"){
       setX(x - 1)
+      setIndex(index - 1)
     } 
     
     // This event handler can use the helper above to obtain a new index for the "B",
@@ -92,7 +97,7 @@ function getXY() {
   function onSubmit(evt) {
     evt.preventDefault();
     
-     axios.post(`http://localhost:9000/api/result`, { x, y, step, email } )
+     axios.post(`http://localhost:9000/api/result`, { x, y, steps: step, email } )
     .then(res => {
       setEmail('')
       setMessage(res.data.message)
@@ -115,8 +120,8 @@ function getXY() {
       <div id="grid">
         {
           [0, 1, 2, 3, 4, 5, 6, 7, 8].map(idx => (
-            <div key={idx} className={`square${idx === 4 ? ' active' : ''}`}>
-              {idx === 4 ? 'B' : null}
+            <div key={idx} className={`square${idx === index ? ' active' : ''}`}>
+              {idx === index ? 'B' : null}
             </div>
           ))
         }
